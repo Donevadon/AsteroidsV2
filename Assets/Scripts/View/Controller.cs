@@ -6,12 +6,13 @@ namespace View
 {
     public class Controller : MonoBehaviour, IPlayerController
     {
+        [SerializeField] private UnityPool pool; 
         public event Action<float> Move;
         public event Action<float> Rotate;
 
         private void Start()
         {
-            new CoreEngineForUnity().Start();
+            new CoreEngineForUnity(pool).Start();
         }
 
         private void Update()
