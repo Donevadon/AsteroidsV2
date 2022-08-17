@@ -7,7 +7,7 @@ namespace View
         private Vector3 _newPosition;
         private Quaternion _newRotation;
 
-        public void Init(NewScript.Core.Asteroid asteroid)
+        public void Init(CoreEngine.Core.Asteroid asteroid)
         {
             asteroid.PositionChanged += vector2 => _newPosition = new Vector2(vector2.X, vector2.Y);
             asteroid.RotationChanged += vector3 => _newRotation = Quaternion.Euler(new Vector3(vector3.X, vector3.Y, vector3.Z));

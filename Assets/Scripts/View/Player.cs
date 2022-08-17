@@ -1,5 +1,5 @@
 ﻿using System;
-using NewScript.Player;
+using CoreEngine.Player;
 using UnityEngine;
 
 namespace View
