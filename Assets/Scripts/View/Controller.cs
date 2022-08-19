@@ -1,5 +1,5 @@
 ﻿using System;
-using CoreEngine.Player;
+using CoreEngine.Entities.Objects;
 using UnityEngine;
 
 namespace View
