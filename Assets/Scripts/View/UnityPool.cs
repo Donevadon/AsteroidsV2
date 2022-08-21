@@ -2,121 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using CoreEngine.Core;
+using CoreEngine.Core.Configurations;
+using CoreEngine.Core.Models;
+using CoreEngine.Entities.Objects;
 using CoreEngine.Entities.Objects.Factory;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
 
 namespace View
 {
-    public class UnityPool : MonoBehaviour, IObjectPool, IFragmentsFactory, IBulletFactory, IPoolSetter
+    public class UnityPool : MonoBehaviour, IObjectPool, IFragmentsFactory, IAmmunitionFactory, IPoolSetter
     {
-        [SerializeField] private Controller _controller;
+        [SerializeField] private Controller controller;
+        [SerializeField] private GameOptions options;
+        [SerializeField] private Metric metric;
         private CoreEngineForUnity _core;
         private IObjectPool _pool;
-        private Dictionary<Type, Queue<GameObjectObserver>> _queue;
-        private Dictionary<Type, GameObjectObserver> _proto;
-        private readonly Queue<Action> _spawns = new();
-        private readonly Queue<GameObjectObserver> _setter = new();
+        private IAmmunitionFactory _ammunition;
+        private IFragmentsFactory _fragments;
+        private Dictionary<ObjectType, Queue<GameObjectObserver>> _queue;
+        private Dictionary<ObjectType, GameObjectObserver> _proto;
 
         private void Awake()
         {
             var objects = Resources.LoadAll<GameObjectObserver>("");
 
-            _queue = objects.ToDictionary(observer => observer.GetType(), _ => new Queue<GameObjectObserver>());
-            _proto = objects.ToDictionary(observer => observer.GetType());
+            _queue = objects.ToDictionary(observer => observer.Type, _ => new Queue<GameObjectObserver>());
+            _proto = objects.ToDictionary(observer => observer.Type);
 
-            _core = new CoreEngineForUnity(this);
-            _pool = new DefaultObjectFactory(_core, _controller);
+            _core = new CoreEngineForUnity(this, options.options);
+            _pool = new DefaultObjectFactory(_core, controller, metric);
+            _ammunition = new BulletFactory(_core);
+            _fragments = new SmallAsteroidFactory(_core);
             _core.Start();
         }
 
-        public IObject GetPlayer(Vector2 position, IBulletFactory factory)
+        public IObject GetPlayer(PlayerModel model)
         {
-            var player = _pool.GetPlayer(position, factory);
+            var player = _pool.GetPlayer(model);
+            var observer = GetObserver(ObjectType.Player, model.MoveOptions.Position);
+            observer.Init(player as CoreEngine.Entities.GameObject, this);
 
-            _spawns.Enqueue(() =>
-            {
-                var observer = GetObserver<Player>(position);
-                observer.Init(player as CoreEngine.Entities.GameObject, this);
-            });
-            
             return player;
         }
 
-        public IObject GetAsteroid(Vector2 vector2, IFragmentsFactory factory)
+        public IObject GetAsteroid(AsteroidModel model)
         {
-            var asteroid = _pool.GetAsteroid(vector2, factory);
-
-            _spawns.Enqueue(() =>
-            {
-                var observer = GetObserver<Asteroid>(vector2);
-                observer.Init(asteroid as CoreEngine.Entities.GameObject, this);
-            });
+            var asteroid = _pool.GetAsteroid(model);
+            var observer = GetObserver(ObjectType.Asteroid, model.MoveOptions.Position);
+            observer.Init(asteroid as CoreEngine.Entities.GameObject, this);
 
             return asteroid;
         }
-        
-        private T GetObserver<T>(Vector2 position)
-            where T : GameObjectObserver
+
+        public IObject GetAlien(AlienModel model)
         {
-            if (_queue[typeof(T)].TryDequeue(out var observer))
+            var asteroid = _pool.GetAlien(model);
+            var observer = GetObserver(ObjectType.Alien,model.MoveOptions.Position);
+            observer.Init(asteroid as CoreEngine.Entities.GameObject, this);
+
+            return asteroid;
+        }
+
+        private GameObjectObserver GetObserver(ObjectType type, Vector2 position)
+        {
+            if (_queue[type].TryDequeue(out var observer))
             {
                 observer.transform.position = new Vector3(position.X, position.Y);
                 observer.gameObject.SetActive(true);
             }
             else
             {
-                observer = Instantiate(_proto[typeof(T)], new Vector3(position.X, position.Y), Quaternion.identity);
+                observer = Instantiate(_proto[type], new Vector3(position.X, position.Y), Quaternion.identity);
             }
 
-            return observer as T;
+            return observer;
         }
 
         private void Update()
         {
-            if (_spawns.TryDequeue(out var action))
-            {
-                action.Invoke();
-            }
-
-            if (_setter.TryDequeue(out var observer))
-            {
-                observer.gameObject.SetActive(false);
-                _queue[observer.GetType()].Enqueue(observer);
-            }
+            _core.UpdateFrame(Time.deltaTime);
         }
 
-        public IObject GetSmallAsteroid(Vector2 position)
+        public IObject GetSmallAsteroid(FragmentAsteroidModel model)
         {
-            var fragment = _pool as IFragmentsFactory;
-            var asteroid = fragment?.GetSmallAsteroid(position);
-
-            _spawns.Enqueue(() =>
-            {
-                var observer = GetObserver<SmallAsteroid>(position);
-                observer.Init(asteroid as CoreEngine.Entities.GameObject, this);
-            });
+            var asteroid = _fragments.GetSmallAsteroid(model);
+            var observer = GetObserver(ObjectType.SmallAsteroid, model.MoveOption.Position);
+            observer.Init(asteroid as CoreEngine.Entities.GameObject, this);
 
             return asteroid;
         }
 
-        public IObject GetBullet(Vector2 position, System.Numerics.Vector3 direction)
+        public IObject GetAmmo(MoveOptions moveOptions)
         {
-            var factory = _pool as IBulletFactory;
-            var bullet = factory?.GetBullet(position, direction);
-
-            _spawns.Enqueue(() =>
-            {
-                var observer = GetObserver<Bullet>(position);
-                observer.Init(bullet as CoreEngine.Entities.GameObject, this);
-            });
+            var bullet = _ammunition.GetAmmo(moveOptions);
+            var observer = GetObserver(ObjectType.Bullet, moveOptions.Position);
+            observer.Init(bullet as CoreEngine.Entities.GameObject, this);
 
             return bullet;
         }
 
         public void Set(GameObjectObserver observer)
         {
-            _setter.Enqueue(observer);
+            _queue[observer.Type].Enqueue(observer);
+            observer.gameObject.SetActive(false);
         }
     }
 }

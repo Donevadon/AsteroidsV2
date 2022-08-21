@@ -1,4 +1,5 @@
 ﻿using CoreEngine.Core;
+using CoreEngine.Core.Configurations;
 
 namespace View
 {
@@ -6,10 +7,12 @@ namespace View
     {
         private readonly UnityPool _pool;
 
-        public CoreEngineForUnity(UnityPool pool)
+        public CoreEngineForUnity(UnityPool pool, Options options) : base(options)
         {
             _pool = pool;
         }
         protected override IObjectPool Pool => _pool;
+        protected override IFragmentsFactory FragmentsFactory => _pool;
+        protected override IAmmunitionFactory AmmunitionFactory => _pool;
     }
 }
