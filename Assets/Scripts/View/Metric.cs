@@ -1,4 +1,6 @@
-﻿using CoreEngine.Entities.Objects.Factory;
+﻿using System;
+using CoreEngine.Core;
+using CoreEngine.Entities.Objects.Factory;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector2 = System.Numerics.Vector2;
@@ -9,30 +11,46 @@ namespace View
     {
         [SerializeField] private Text position;
         [SerializeField] private Text angle;
+        [SerializeField] private Text speed;
+        [SerializeField] private Text laserTime;
+        [SerializeField] private Text laserCount;
+        [SerializeField] private Text score;
+        [SerializeField] private GameObject endGame;
 
-        public void UpdatePosition(Vector2 position)
+
+        public void OnUpdatePosition(Vector2 position)
         {
             this.position.text = $"Position: " + position;
         }
 
-        public void UpdateAngle(float angle)
+        public void OnUpdateAngle(float angle)
         {
             this.angle.text = "Angle: " + angle;
         }
 
-        public void UpdateSpeed(float speed)
+        public void OnUpdateSpeed(float speed)
         {
-            throw new System.NotImplementedException();
+            this.speed.text = "Speed: " + speed;
         }
 
-        public void UpdateLaserCount(int count)
+        public void OnUpdateLaserCount(int count)
         {
-            throw new System.NotImplementedException();
+            laserCount.text = "Laser count: " + count;
         }
 
-        public void LaserRollbackTime(int time)
+        public void OnLaserRollbackTime(TimeSpan time)
         {
-            throw new System.NotImplementedException();
+            laserTime.text = "Laser time: " + time.Seconds + " sec";
+        }
+
+        public void OnPlayerDead(IObject sender)
+        {
+            endGame.SetActive(true);
+        }
+
+        public void ScoreUpdate(int score)
+        {
+            this.score.text = "Score: " + score;
         }
     }
 }

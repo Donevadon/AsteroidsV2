@@ -1,5 +1,6 @@
 ﻿using CoreEngine.Core;
 using UnityEngine;
+using GameObject = CoreEngine.Entities.GameObject;
 
 namespace View
 {
@@ -7,28 +8,33 @@ namespace View
     {
         [SerializeField] private ObjectType type;
         public ObjectType Type => type;
-        private Vector3 _newPosition;
-        private Quaternion _newRotation;
-        private IPoolSetter Pool { get; set; }
+        private IPoolSetter _pool;
 
-        public void Init(CoreEngine.Entities.GameObject player, IPoolSetter pool)
+        public void Init(CoreEngine.Entities.GameObject obj, IPoolSetter pool)
         {
-            player.PositionChanged += vector2 => _newPosition = new Vector2(vector2.X, vector2.Y);
-            player.RotationChanged += angle => _newRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-            Pool = pool;
-            var currentTransform = transform;
-            _newPosition = currentTransform.position;
-            _newRotation = currentTransform.rotation;
-            player.Destroyed += sender =>
-            {
-                Pool.Set(this);
-            };
+            _pool = pool;
+            obj.PositionChanged += OnUpdatePosition;
+            obj.RotationChanged += OnUpdateRotation;
+            obj.Destroyed += OnEndObserve;
         }
 
-        private void Update()
+        private void OnUpdatePosition(System.Numerics.Vector2 position)
         {
-            transform.position = _newPosition;
-            transform.rotation = _newRotation;
+            transform.position = new Vector3(position.X, position.Y);
+        }
+
+        private void OnUpdateRotation(float angle)
+        {
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        }
+
+        private void OnEndObserve(IObject sender)
+        {
+            var obj = sender as GameObject;
+            obj.PositionChanged -= OnUpdatePosition;
+            obj.RotationChanged -= OnUpdateRotation;
+            obj.Destroyed -= OnEndObserve;
+            _pool.Set(this);
         }
     }
 }

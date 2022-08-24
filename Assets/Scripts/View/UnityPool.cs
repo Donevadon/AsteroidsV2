@@ -4,9 +4,9 @@ using System.Linq;
 using CoreEngine.Core;
 using CoreEngine.Core.Configurations;
 using CoreEngine.Core.Models;
-using CoreEngine.Entities.Objects;
 using CoreEngine.Entities.Objects.Factory;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Vector2 = System.Numerics.Vector2;
 
 namespace View
@@ -16,6 +16,7 @@ namespace View
         [SerializeField] private Controller controller;
         [SerializeField] private GameOptions options;
         [SerializeField] private Metric metric;
+        [SerializeField] private LaserView laserView;
         private CoreEngineForUnity _core;
         private IObjectPool _pool;
         private IAmmunitionFactory _ammunition;
@@ -93,13 +94,21 @@ namespace View
             return asteroid;
         }
 
-        public IObject GetAmmo(MoveOptions moveOptions)
+        public IObject GetAmmo(MoveOptions moveOptions, Vector2 size, Action addScore)
         {
-            var bullet = _ammunition.GetAmmo(moveOptions);
+            var bullet = _ammunition.GetAmmo(moveOptions, size, addScore);
             var observer = GetObserver(ObjectType.Bullet, moveOptions.Position);
             observer.Init(bullet as CoreEngine.Entities.GameObject, this);
 
             return bullet;
+        }
+
+        public IObject GetLaser(MoveOptions moveOptions, Vector2 size, Action addScore)
+        {
+            var laser = _ammunition.GetLaser(moveOptions, size, addScore);
+            laserView.Init(laser, moveOptions.Angle, size);
+
+            return laser;
         }
 
         public void Set(GameObjectObserver observer)

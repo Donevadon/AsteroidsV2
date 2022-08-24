@@ -22,6 +22,18 @@ MonoBehaviour:
       MoveSpeed: 2
       StartAngle: 180
       RotateSpeed: 100
+      GunOptions:
+        BulletOptions:
+          Speed: 5
+          ReloadTime: 0.5
+          SizeX: 0.2
+          SizeY: 0.2
+        LaserOptions:
+          SizeX: 30
+          SizeY: 0.13
+          ReloadTime: 0.5
+      SizeX: 0.2
+      SizeY: 0.2
     AsteroidOptions:
       MoveSpeed: 1
       RotateSpeed: 100
@@ -29,6 +41,12 @@ MonoBehaviour:
       FragmentAsteroidOptions:
         Acceleration: 0
         MaxRotateSpeed: 0
+        SizeX: 0.2
+        SizeY: 0.2
+      SizeX: 0.5
+      SizeY: 0.5
     AlienOptions:
       MoveSpeed: 1
       RotateSpeed: 100
+      SizeX: 0.2
+      SizeY: 0.2
