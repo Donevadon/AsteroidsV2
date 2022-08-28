@@ -1,4 +1,4 @@
-﻿using CoreEngine.Core;
+﻿using System;
 using UnityEngine;
 using GameObject = CoreEngine.Entities.GameObject;
 
@@ -10,7 +10,7 @@ namespace View
         public ObjectType Type => type;
         private IPoolSetter _pool;
 
-        public void Init(CoreEngine.Entities.GameObject obj, IPoolSetter pool)
+        public void Init(GameObject obj, IPoolSetter pool)
         {
             _pool = pool;
             obj.PositionChanged += OnUpdatePosition;
@@ -25,12 +25,12 @@ namespace View
 
         private void OnUpdateRotation(float angle)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
         }
 
-        private void OnEndObserve(IObject sender)
+        private void OnEndObserve(object sender)
         {
-            var obj = sender as GameObject;
+            var obj = sender as GameObject ?? throw new InvalidOperationException();
             obj.PositionChanged -= OnUpdatePosition;
             obj.RotationChanged -= OnUpdateRotation;
             obj.Destroyed -= OnEndObserve;

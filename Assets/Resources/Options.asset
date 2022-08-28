@@ -26,27 +26,40 @@ MonoBehaviour:
         BulletOptions:
           Speed: 5
           ReloadTime: 0.5
-          SizeX: 0.2
-          SizeY: 0.2
+          Size:
+            X: 0.2
+            Y: 0.2
+          LifeTime: 3
         LaserOptions:
-          SizeX: 30
-          SizeY: 0.13
-          ReloadTime: 0.5
-      SizeX: 0.2
-      SizeY: 0.2
+          Size:
+            X: 30
+            Y: 0.13
+          ReloadTime: 10
+          LifeTime: 0.002
+      Size:
+        X: 0.5
+        Y: 0.5
+      Breaking: 0.001
+      MoveRate: 0.02
     AsteroidOptions:
       MoveSpeed: 1
       RotateSpeed: 100
       FragmentCount: 2
       FragmentAsteroidOptions:
-        Acceleration: 0
-        MaxRotateSpeed: 0
-        SizeX: 0.2
-        SizeY: 0.2
-      SizeX: 0.5
-      SizeY: 0.5
+        Acceleration: 0.5
+        MaxRotateSpeed: 100
+        Size:
+          X: 0.2
+          Y: 0.2
+      Size:
+        X: 0.5
+        Y: 0.5
     AlienOptions:
-      MoveSpeed: 1
+      MoveSpeed: 2.5
       RotateSpeed: 100
-      SizeX: 0.2
-      SizeY: 0.2
+      Size:
+        X: 0.5
+        Y: 0.5
+      MoveRate: 0.02
+    AsteroidSpawnTime: 3
+    AlienSpawnTime: 30

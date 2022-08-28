@@ -1,6 +1,7 @@
 using System;
 using CoreEngine.Core;
 using UnityEngine;
+using GameObject = CoreEngine.Entities.GameObject;
 using Vector2 = System.Numerics.Vector2;
 
 namespace View
@@ -14,17 +15,16 @@ namespace View
             _renderer = GetComponent<LineRenderer>();
         }
 
-        public void Init(IObject laser, float angle, Vector2 size)
+        public void Init(IObject laser, Vector2 position, float angle, Vector2 size)
         {
             laser.Destroyed += DisableLaser;
             var direction = GetDirection(angle);
-            EnableLaser(new Vector3(laser.Position.X, laser.Position.Y), direction, size);
+            EnableLaser(new Vector3(position.X, position.Y), direction, size);
         }
 
-        private void DisableLaser(IObject obj)
+        private void DisableLaser(object obj)
         {
             _renderer.positionCount = 0;
-            obj.Destroyed -= DisableLaser;
         }
 
         private void EnableLaser(Vector3 position, Vector3 direction, Vector2 size)

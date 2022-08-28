@@ -1,6 +1,6 @@
 ﻿using System;
 using CoreEngine.Core;
-using CoreEngine.Entities.Objects.Factory;
+using CoreEngine.Entities.Objects.ControlledObjects.Player;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector2 = System.Numerics.Vector2;
@@ -9,48 +9,48 @@ namespace View
 {
     public class Metric : MonoBehaviour, IMetricView
     {
-        [SerializeField] private Text position;
-        [SerializeField] private Text angle;
-        [SerializeField] private Text speed;
-        [SerializeField] private Text laserTime;
-        [SerializeField] private Text laserCount;
-        [SerializeField] private Text score;
+        [SerializeField] private Text positionText;
+        [SerializeField] private Text angleText;
+        [SerializeField] private Text speedText;
+        [SerializeField] private Text laserTimeText;
+        [SerializeField] private Text laserCountText;
+        [SerializeField] private Text scoreText;
         [SerializeField] private GameObject endGame;
 
 
         public void OnUpdatePosition(Vector2 position)
         {
-            this.position.text = $"Position: " + position;
+            positionText.text = $"Position: " + position;
         }
 
         public void OnUpdateAngle(float angle)
         {
-            this.angle.text = "Angle: " + angle;
+            angleText.text = "Angle: " + angle;
         }
 
         public void OnUpdateSpeed(float speed)
         {
-            this.speed.text = "Speed: " + speed;
+            speedText.text = "Speed: " + speed;
         }
 
         public void OnUpdateLaserCount(int count)
         {
-            laserCount.text = "Laser count: " + count;
+            laserCountText.text = "Laser count: " + count;
         }
 
         public void OnLaserRollbackTime(TimeSpan time)
         {
-            laserTime.text = "Laser time: " + time.Seconds + " sec";
+            laserTimeText.text = "Laser time: " + time.Seconds + " sec";
         }
 
-        public void OnPlayerDead(IObject sender)
+        public void OnPlayerDead(object sender)
         {
             endGame.SetActive(true);
         }
 
         public void ScoreUpdate(int score)
         {
-            this.score.text = "Score: " + score;
+            scoreText.text = "Score: " + score;
         }
     }
 }

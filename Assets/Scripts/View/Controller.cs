@@ -1,11 +1,12 @@
 ﻿using System;
-using CoreEngine.Entities.Objects;
+using CoreEngine.Behaviors.ControlledBehaviors;
+using CoreEngine.Entities.Objects.ControlledObjects;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace View
 {
-    public class Controller : MonoBehaviour, IController
+    public class Controller : MonoBehaviour, IMotion, IShoot
     {
         private PlayerInput _input;
         public event Action Move;
