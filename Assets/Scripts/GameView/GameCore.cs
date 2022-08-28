@@ -1,12 +1,11 @@
-﻿using System;
+﻿using GameView.ObjectsPool;
 using UnityEngine;
 
-namespace View
+namespace GameView
 {
     public class GameCore : MonoBehaviour
     {
         [SerializeField] private GameOptions gameOptions;
-        [SerializeField] private GameObject endGamePanel;
         [SerializeField] private UnityPool pool;
 
         private CoreEngine.Core.CoreEngine _coreEngine;
@@ -22,7 +21,6 @@ namespace View
             _coreEngine.Dispose();
             _coreEngine = CreateCoreEngine();
             _coreEngine.Start();
-            endGamePanel.SetActive(false);
         }
 
         private CoreEngine.Core.CoreEngine CreateCoreEngine() => new(gameOptions.options, pool, pool, pool);

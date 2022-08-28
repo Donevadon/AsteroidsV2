@@ -1,10 +1,9 @@
 using System;
 using CoreEngine.Core;
 using UnityEngine;
-using GameObject = CoreEngine.Entities.GameObject;
 using Vector2 = System.Numerics.Vector2;
 
-namespace View
+namespace GameView.Views
 {
     public class LaserView : MonoBehaviour
     {

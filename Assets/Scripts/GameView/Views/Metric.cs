@@ -1,11 +1,10 @@
 ﻿using System;
-using CoreEngine.Core;
 using CoreEngine.Entities.Objects.ControlledObjects.Player;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector2 = System.Numerics.Vector2;
 
-namespace View
+namespace GameView.Views
 {
     public class Metric : MonoBehaviour, IMetricView
     {
@@ -14,9 +13,6 @@ namespace View
         [SerializeField] private Text speedText;
         [SerializeField] private Text laserTimeText;
         [SerializeField] private Text laserCountText;
-        [SerializeField] private Text scoreText;
-        [SerializeField] private GameObject endGame;
-
 
         public void OnUpdatePosition(Vector2 position)
         {
@@ -41,16 +37,6 @@ namespace View
         public void OnLaserRollbackTime(TimeSpan time)
         {
             laserTimeText.text = "Laser time: " + time.Seconds + " sec";
-        }
-
-        public void OnPlayerDead(object sender)
-        {
-            endGame.SetActive(true);
-        }
-
-        public void ScoreUpdate(int score)
-        {
-            scoreText.text = "Score: " + score;
         }
     }
 }

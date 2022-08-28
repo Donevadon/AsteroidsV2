@@ -1,7 +1,7 @@
 ﻿using CoreEngine.Core.Configurations;
 using UnityEngine;
 
-namespace View
+namespace GameView
 {
     [CreateAssetMenu(fileName = "Options", menuName = "Options", order = 0)]
     public class GameOptions : ScriptableObject

@@ -1,4 +1,4 @@
-﻿namespace View
+﻿namespace GameView.ObjectsPool
 {
     public enum ObjectType
     {

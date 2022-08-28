@@ -3,8 +3,9 @@ using CoreEngine.Behaviors.ControlledBehaviors;
 using CoreEngine.Entities.Objects.ControlledObjects;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PlayerInput = View.PlayerInput;
 
-namespace View
+namespace GameView.Controllers
 {
     public class Controller : MonoBehaviour, IMotion, IShoot
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 using GameObject = CoreEngine.Entities.GameObject;
 
-namespace View
+namespace GameView.ObjectsPool
 {
     public class GameObjectObserver : MonoBehaviour
     {

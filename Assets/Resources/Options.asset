@@ -35,7 +35,7 @@ MonoBehaviour:
             X: 30
             Y: 0.13
           ReloadTime: 10
-          LifeTime: 0.002
+          LifeTime: 0.02
       Size:
         X: 0.5
         Y: 0.5

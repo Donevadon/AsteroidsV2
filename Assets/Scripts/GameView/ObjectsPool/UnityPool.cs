@@ -4,18 +4,20 @@ using System.Linq;
 using CoreEngine.Core;
 using CoreEngine.Core.Models;
 using CoreEngine.Entities.Objects.Factory;
+using GameView.Controllers;
+using GameView.Views;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
-using Core = CoreEngine.Core.CoreEngine;
 using GameObject = CoreEngine.Entities.GameObject;
 
-namespace View
+namespace GameView.ObjectsPool
 {
     public class UnityPool : MonoBehaviour, IObjectPool, IFragmentsFactory, IAmmunitionFactory, IPoolSetter
     {
         [SerializeField] private Controller controller;
         [SerializeField] private Metric metric;
         [SerializeField] private LaserView laserView;
+        [SerializeField] private GameResult gameResult;
         private Dictionary<ObjectType, Queue<GameObjectObserver>> _queue;
         private Dictionary<ObjectType, GameObjectObserver> _proto;
         private IAmmunitionFactory _ammunition;
@@ -30,7 +32,7 @@ namespace View
             _queue = objects.ToDictionary(observer => observer.Type, _ => new Queue<GameObjectObserver>());
             _proto = objects.ToDictionary(observer => observer.Type);
 
-            _pool = new DefaultObjectFactory(controller, controller, metric);
+            _pool = new DefaultObjectFactory(controller, controller, metric, gameResult);
             _ammunition = new BulletFactory();
             _fragments = new SmallAsteroidFactory();
         }
