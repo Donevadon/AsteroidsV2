@@ -1,4 +1,5 @@
-﻿using CoreEngine.Entities.Objects.ControlledObjects.Player;
+﻿using System;
+using CoreEngine.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,21 +10,37 @@ namespace GameView.Views
         [SerializeField] private GameCore core;
         [SerializeField] private Text scoreText;
         [SerializeField] private GameObject endGamePanel;
-        
-        void IGameResultView.OnPlayerDead(object sender)
+
+        private void OnPlayerDead(object sender)
         {
             endGamePanel.SetActive(true);
         }
 
-        void IGameResultView.ScoreUpdate(int score)
+        private void ScoreUpdate(int score)
         {
             scoreText.text = "Score: " + score;
         }
 
         public void Restart()
         {
+            ScoreUpdate(default);
             core.Restart();
             endGamePanel.SetActive(false);
+        }
+
+        public void Subscribe(IGameProcess player)
+        {
+            player.Destroyed += Unsubscribe;
+            player.ScoreAdded += ScoreUpdate;
+            player.Destroyed += OnPlayerDead;
+        }
+
+        private void Unsubscribe(object obj)
+        {
+            var player = obj as IGameProcess ?? throw new ArgumentException();
+            player.ScoreAdded -= ScoreUpdate;
+            player.Destroyed -= OnPlayerDead;
+            player.Destroyed -= Unsubscribe;
         }
     }
 }

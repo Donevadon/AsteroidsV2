@@ -1,5 +1,4 @@
 ﻿using System;
-using CoreEngine.Behaviors.ControlledBehaviors;
 using CoreEngine.Entities.Objects.ControlledObjects;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,7 +6,7 @@ using PlayerInput = View.PlayerInput;
 
 namespace GameView.Controllers
 {
-    public class Controller : MonoBehaviour, IMotion, IShoot
+    public class Controller : MonoBehaviour, IMotionController, IShootController
     {
         private PlayerInput _input;
         public event Action Move;

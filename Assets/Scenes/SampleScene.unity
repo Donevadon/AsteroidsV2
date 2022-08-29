@@ -1033,9 +1033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1379192708}
-  metric: {fileID: 88052038}
   laserView: {fileID: 1854156399}
-  gameResult: {fileID: 1416688644}
 --- !u!114 &1379192708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1061,8 +1059,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOptions: {fileID: 11400000, guid: 4786c1ae30fd7f546a72523726d4b05f, type: 2}
-  endGamePanel: {fileID: 0}
   pool: {fileID: 1379192707}
+  controller: {fileID: 1379192708}
+  metric: {fileID: 88052038}
+  gameResult: {fileID: 1416688644}
 --- !u!4 &1379192710
 Transform:
   m_ObjectHideFlags: 0

@@ -1,4 +1,6 @@
-﻿using GameView.ObjectsPool;
+﻿using GameView.Controllers;
+using GameView.ObjectsPool;
+using GameView.Views;
 using UnityEngine;
 
 namespace GameView
@@ -7,6 +9,9 @@ namespace GameView
     {
         [SerializeField] private GameOptions gameOptions;
         [SerializeField] private UnityPool pool;
+        [SerializeField] private Controller controller;
+        [SerializeField] private Metric metric;
+        [SerializeField] private GameResult gameResult;
 
         private CoreEngine.Core.CoreEngine _coreEngine;
 
@@ -23,7 +28,7 @@ namespace GameView
             _coreEngine.Start();
         }
 
-        private CoreEngine.Core.CoreEngine CreateCoreEngine() => new(gameOptions.options, pool, pool, pool);
+        private CoreEngine.Core.CoreEngine CreateCoreEngine() => new(gameOptions.options, pool, pool, pool, metric, gameResult);
 
         private void Start()
         {

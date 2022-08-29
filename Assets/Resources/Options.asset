@@ -17,8 +17,8 @@ MonoBehaviour:
       Height: 5.3
       Width: 9.2
     PlayerOptions:
-      StartPositionX: 2
-      StartPositionY: 3
+      StartPositionX: 0
+      StartPositionY: 0
       MoveSpeed: 2
       StartAngle: 180
       RotateSpeed: 100
@@ -62,4 +62,4 @@ MonoBehaviour:
         Y: 0.5
       MoveRate: 0.02
     AsteroidSpawnTime: 3
-    AlienSpawnTime: 30
+    AlienSpawnTime: 15

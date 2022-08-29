@@ -1,5 +1,5 @@
 ﻿using System;
-using CoreEngine.Entities.Objects.ControlledObjects.Player;
+using CoreEngine.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector2 = System.Numerics.Vector2;
@@ -14,29 +14,60 @@ namespace GameView.Views
         [SerializeField] private Text laserTimeText;
         [SerializeField] private Text laserCountText;
 
-        public void OnUpdatePosition(Vector2 position)
+        private void OnUpdatePosition(Vector2 position)
         {
             positionText.text = $"Position: " + position;
         }
 
-        public void OnUpdateAngle(float angle)
+        private void OnUpdateAngle(float angle)
         {
             angleText.text = "Angle: " + angle;
         }
 
-        public void OnUpdateSpeed(float speed)
+        private void OnUpdateSpeed(float speed)
         {
             speedText.text = "Speed: " + speed;
         }
 
-        public void OnUpdateLaserCount(int count)
+        private void OnUpdateLaserCount(int count)
         {
             laserCountText.text = "Laser count: " + count;
         }
 
-        public void OnLaserRollbackTime(TimeSpan time)
+        private void OnLaserRollbackTime(TimeSpan time)
         {
             laserTimeText.text = "Laser time: " + time.Seconds + " sec";
+        }
+
+        public void Subscribe(IMetricSource source)
+        {
+            source.LaserReloaded += OnUpdateLaserCount;
+            source.PositionChanged += OnUpdatePosition;
+            source.RotationChanged += OnUpdateAngle;
+            source.SpeedChanged += OnUpdateSpeed;
+            source.LaserTimeUpdated += OnLaserRollbackTime;
+            source.Destroyed += Unsubscribe;
+            ResetValues(source);
+        }
+
+        private void Unsubscribe(object obj)
+        {
+            var source = obj as IMetricSource ?? throw new ArgumentException();
+            source.LaserReloaded -= OnUpdateLaserCount;
+            source.PositionChanged -= OnUpdatePosition;
+            source.RotationChanged -= OnUpdateAngle;
+            source.SpeedChanged -= OnUpdateSpeed;
+            source.LaserTimeUpdated -= OnLaserRollbackTime;
+            source.Destroyed -= Unsubscribe;
+        }
+
+        private void ResetValues(IMetricSource source)
+        {
+            OnUpdateAngle(source.Angle);
+            OnUpdatePosition(source.Position);
+            OnUpdateSpeed(default);
+            OnLaserRollbackTime(default);
+            OnUpdateLaserCount(default);
         }
     }
 }

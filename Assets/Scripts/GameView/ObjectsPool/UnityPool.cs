@@ -15,9 +15,7 @@ namespace GameView.ObjectsPool
     public class UnityPool : MonoBehaviour, IObjectFactory, IFragmentsFactory, IAmmunitionFactory, IPoolSetter
     {
         [SerializeField] private Controller controller;
-        [SerializeField] private Metric metric;
         [SerializeField] private LaserView laserView;
-        [SerializeField] private GameResult gameResult;
         private Dictionary<ObjectType, Queue<GameObjectObserver>> _queue;
         private Dictionary<ObjectType, GameObjectObserver> _proto;
         private IAmmunitionFactory _ammunition;
@@ -32,12 +30,12 @@ namespace GameView.ObjectsPool
             _queue = objects.ToDictionary(observer => observer.Type, _ => new Queue<GameObjectObserver>());
             _proto = objects.ToDictionary(observer => observer.Type);
 
-            _pool = new DefaultObjectFactory(controller, controller, metric, gameResult);
+            _pool = new DefaultObjectFactory(controller, controller);
             _ammunition = new BulletFactory();
             _fragments = new SmallAsteroidFactory();
         }
 
-        public IObject GetPlayer(PlayerModel model)
+        public IPlayer GetPlayer(PlayerModel model)
         {
             var player = _pool.GetPlayer(model);
             var observer = GetObserver(ObjectType.Player, model.MoveOptions.Position, model.MoveOptions.Angle);
