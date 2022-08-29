@@ -12,7 +12,7 @@ using GameObject = CoreEngine.Entities.GameObject;
 
 namespace GameView.ObjectsPool
 {
-    public class UnityPool : MonoBehaviour, IObjectPool, IFragmentsFactory, IAmmunitionFactory, IPoolSetter
+    public class UnityPool : MonoBehaviour, IObjectFactory, IFragmentsFactory, IAmmunitionFactory, IPoolSetter
     {
         [SerializeField] private Controller controller;
         [SerializeField] private Metric metric;
@@ -22,7 +22,7 @@ namespace GameView.ObjectsPool
         private Dictionary<ObjectType, GameObjectObserver> _proto;
         private IAmmunitionFactory _ammunition;
         private IFragmentsFactory _fragments;
-        private IObjectPool _pool;
+        private IObjectFactory _pool;
 
 
         private void Awake()
@@ -64,7 +64,7 @@ namespace GameView.ObjectsPool
             return asteroid;
         }
 
-        event Action<IObject> IObjectPool.ObjectCreated
+        event Action<IObject> IObjectFactory.ObjectCreated
         {
             add => _pool.ObjectCreated += value;
             remove => _pool.ObjectCreated -= value;
